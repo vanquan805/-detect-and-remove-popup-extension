@@ -116,7 +116,7 @@ sdf8yw8er.onActivated.addListener(async function (activeInfo) {
     popups = popups && popups.popups ? popups.popups : {};
 
     if (typeof popups[tabId] !== "undefined") {
-        let text = popups[tabId] < 99 && popups[tabId] > 0 ? `${Math.floor(popups[tabId] / 10)}0+` : (popups[tabId] <= 10 ? `${popups[tabId]}` : '99+');
+        let text = popups[tabId] < 99 && popups[tabId] > 10 ? `${Math.floor(popups[tabId] / 10)}0+` : (popups[tabId] <= 10 ? `${popups[tabId]}` : '99+');
         await sf424fsfs.action.setBadgeText({text: text});
     }
 });
