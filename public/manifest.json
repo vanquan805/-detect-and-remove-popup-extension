@@ -1,0 +1,43 @@
+{
+  "name": "Detect & Remove Popup",
+  "short_name": "Detect & Remove Popup",
+  "action": {
+    "default_popup": "index.html",
+    "default_title": "Detect & Remove Popup"
+  },
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self'"
+  },
+  "description": "A JavaScript utility that identifies and manages unwanted popups on a webpage. It attempts to open a popup and checks if it's blocked or allowed by the browser. If allowed, the popup can be immediately closed or manipulated as needed.",
+  "icons": {
+    "128": "media/detect-remove-popup.png",
+    "16": "media/detect-remove-popup.png",
+    "48": "media/detect-remove-popup.png"
+  },
+  "background": {
+    "service_worker": "backend/background.js"
+  },
+  "content_scripts": [
+    {
+      "js": [
+        "frontend/main.js"
+      ],
+      "matches": [
+        "*://*/*"
+      ],
+      "run_at": "document_end"
+    }
+  ],
+  "host_permissions": [
+    "*://*/*"
+  ],
+  "manifest_version": 3,
+  "permissions": [
+    "activeTab",
+    "tabs",
+    "scripting",
+    "storage",
+    "unlimitedStorage"
+  ],
+  "version": "1.0.0"
+}
