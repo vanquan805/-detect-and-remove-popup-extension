@@ -118,5 +118,7 @@ sdf8yw8er.onActivated.addListener(async function (activeInfo) {
     if (typeof popups[tabId] !== "undefined") {
         let text = popups[tabId] < 99 && popups[tabId] > 10 ? `${Math.floor(popups[tabId] / 10)}0+` : (popups[tabId] <= 10 ? `${popups[tabId]}` : '99+');
         await sf424fsfs.action.setBadgeText({text: text});
+    }else{
+        await sf424fsfs.action.setBadgeText({text: ''});
     }
 });
