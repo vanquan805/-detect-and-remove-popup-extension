@@ -1,6 +1,5 @@
 /*global chrome*/
 /*global browser*/
-import {timeout, waitUntilPageLoaded} from "./libs/libs";
 
 let sf424fsfs = chrome || browser;
 let sdfs5r324sdf = sf424fsfs.runtime;
