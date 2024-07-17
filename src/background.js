@@ -25,7 +25,7 @@ sfsw42rdfes45.addListener(async function (request, sender, reply) {
                         let elements = document.querySelectorAll('*');
                         elements.forEach((element) => {
                             let style = window.getComputedStyle(element);
-                            if (settings && settings.position && settings.position.indexOf(style.position) !== -1 && element.offsetHeight >= settings.minHeight) {
+                            if (settings && settings.position && settings.position.indexOf(style.position) !== -1) {
                                 element.remove();
                             }
                         });
@@ -40,6 +40,51 @@ sfsw42rdfes45.addListener(async function (request, sender, reply) {
                 await sf424fsfs.action.setBadgeText({text: '0'});
             }
 
+            break;
+        case 'removeShowingPopup':
+            var tabs = await sdf8yw8er.query({active: true});
+            var currentTab = tabs && tabs.length ? tabs[0] : null;
+
+            var settings = await sf424fsfs.storage.local.get(['settings']);
+            settings = settings && settings.settings ? settings.settings : {position: ['fixed'], minHeight: 200, autoRemove: false};
+
+            if (currentTab) {
+
+                let removeShowingPopup = (settings) => {
+                    let elements = document.querySelectorAll('*');
+                    let popupElements = [];
+                    for (let i = 0; i < elements.length; i++) {
+                        let element = elements[i];
+                        let style = window.getComputedStyle(element);
+
+                        if (settings && settings.position && settings.position.indexOf(style.position) !== -1) {
+                            if (style.display !== 'none' && element.offsetHeight >= settings.minHeight) {
+                                element.remove();
+                            } else {
+                                popupElements.push(element);
+                            }
+                        }
+                    }
+
+                    return popupElements.length;
+                };
+
+                let result = await sdf7sdfh.executeScript({
+                    target: {tabId: currentTab.id},
+                    func: removeShowingPopup,
+                    args: [settings]
+                });
+
+                if (result && result[0] && typeof result[0].result !== "undefined") {
+                    let popupCount = result[0].result;
+                    let popups = await sdfsfsdf.local.get(['popups']);
+                    popups = popups && popups.popups ? popups.popups : {};
+                    popups[currentTab.id] = popupCount;
+                    await sdfsfsdf.local.set({popups});
+                    let text = popupCount < 99 && popupCount > 10 ? `${Math.floor(popupCount / 10)}0+` : (popupCount <= 10 ? `${popupCount}` : '99+');
+                    await sf424fsfs.action.setBadgeText({text: text});
+                }
+            }
             break;
         case 'updatePopupCount':
             var tabs = await sdf8yw8er.query({active: true});
@@ -70,11 +115,12 @@ sfsw42rdfes45.addListener(async function (request, sender, reply) {
                     for (let i = 0; i < elements.length; i++) {
                         let element = elements[i];
                         let style = window.getComputedStyle(element);
-                        if (settings && settings.position && settings.position.indexOf(style.position) !== -1 && element.offsetHeight >= settings.minHeight) {
-                            if (!settings.autoRemove) {
-                                popupElements.push(element);
-                            }else{
+
+                        if (settings && settings.position && settings.position.indexOf(style.position) !== -1) {
+                            if (settings.autoRemove && style.display !== 'none' && element.offsetHeight >= settings.minHeight) {
                                 element.remove();
+                            } else {
+                                popupElements.push(element);
                             }
                         }
                     }

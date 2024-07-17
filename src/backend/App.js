@@ -67,6 +67,20 @@ function App() {
         setTotal(0);
     };
 
+    let onRemoveShowingPopup = () => {
+        sf424fsfs.runtime.sendMessage({
+            action: "removeShowingPopup"
+        });
+
+        setTimeout(() => {
+            sf424fsfs.storage.local.get(['popups'], function (values) {
+                if (values && values.popups && values.popups[currentTabId]) {
+                    setTotal(values.popups[currentTabId]);
+                }
+            });
+        }, 2000);
+    };
+
     let onFinish = async (values) => {
         let {position, minHeight, autoRemove} = values;
 
@@ -87,8 +101,14 @@ function App() {
             label: 'General',
             children: <>
                 <Typography.Paragraph>We found {total} popup.</Typography.Paragraph>
-                <Button type="primary" danger onClick={onRemove} disabled={total === 0}>
-                    Remove all popup
+                <div style={{marginBottom: '15px'}}>
+                    <Button type="primary" danger onClick={onRemove} disabled={total === 0}>
+                        Remove all popup
+                    </Button>
+                </div>
+
+                <Button type="primary" danger onClick={onRemoveShowingPopup} disabled={total === 0}>
+                    Remove all showing popup
                 </Button>
             </>,
         },
