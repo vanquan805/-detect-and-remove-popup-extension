@@ -27,7 +27,8 @@ async function getAllPopup() {
     }
 
 
-    if (settings.autoRemove){
+
+    if (document.querySelector('body').style.overflow === 'hidden') {
         document.querySelector('body').style.overflow = 'auto';
     }
 

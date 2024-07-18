@@ -38,6 +38,16 @@ sfsw42rdfes45.addListener(async function (request, sender, reply) {
                 popups[currentTab.id] = 0;
                 await sdfsfsdf.local.set({popups});
                 await sf424fsfs.action.setBadgeText({text: '0'});
+
+                await sdf7sdfh.executeScript({
+                    target: {tabId: currentTab.id},
+                    func: ()=>{
+                        if (document.querySelector('body').style.overflow === 'hidden') {
+                            document.querySelector('body').style.overflow = 'auto';
+                        }
+                    },
+                    args: null
+                });
             }
 
             break;
@@ -83,6 +93,16 @@ sfsw42rdfes45.addListener(async function (request, sender, reply) {
                     await sdfsfsdf.local.set({popups});
                     let text = popupCount < 99 && popupCount > 10 ? `${Math.floor(popupCount / 10)}0+` : (popupCount <= 10 ? `${popupCount}` : '99+');
                     await sf424fsfs.action.setBadgeText({text: text});
+
+                    await sdf7sdfh.executeScript({
+                        target: {tabId: currentTab.id},
+                        func: ()=>{
+                            if (document.querySelector('body').style.overflow === 'hidden') {
+                                document.querySelector('body').style.overflow = 'auto';
+                            }
+                        },
+                        args: null
+                    });
                 }
             }
             break;
@@ -142,6 +162,16 @@ sfsw42rdfes45.addListener(async function (request, sender, reply) {
                     await sdfsfsdf.local.set({popups});
                     let text = popupCount < 99 && popupCount > 10 ? `${Math.floor(popupCount / 10)}0+` : (popupCount <= 10 ? `${popupCount}` : '99+');
                     await sf424fsfs.action.setBadgeText({text: text});
+
+                    await sdf7sdfh.executeScript({
+                        target: {tabId: currentTab.id},
+                        func: ()=>{
+                            if (document.querySelector('body').style.overflow === 'hidden') {
+                                document.querySelector('body').style.overflow = 'auto';
+                            }
+                        },
+                        args: null
+                    });
                 }
             }
             break;
