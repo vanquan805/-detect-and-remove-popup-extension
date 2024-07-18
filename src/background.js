@@ -1,6 +1,8 @@
 /*global chrome*/
 /*global browser*/
 
+import {changeOverflow} from "./libs/functions";
+
 let sf424fsfs = chrome || browser;
 let sdfs5r324sdf = sf424fsfs.runtime;
 let sfsw42rdfes45 = sdfs5r324sdf.onMessage;
@@ -41,11 +43,7 @@ sfsw42rdfes45.addListener(async function (request, sender, reply) {
 
                 await sdf7sdfh.executeScript({
                     target: {tabId: currentTab.id},
-                    func: ()=>{
-                        if (document.querySelector('body').style.overflow === 'hidden') {
-                            document.querySelector('body').style.overflow = 'auto';
-                        }
-                    },
+                    func: changeOverflow,
                     args: null
                 });
             }
@@ -96,11 +94,7 @@ sfsw42rdfes45.addListener(async function (request, sender, reply) {
 
                     await sdf7sdfh.executeScript({
                         target: {tabId: currentTab.id},
-                        func: ()=>{
-                            if (document.querySelector('body').style.overflow === 'hidden') {
-                                document.querySelector('body').style.overflow = 'auto';
-                            }
-                        },
+                        func: changeOverflow,
                         args: null
                     });
                 }
@@ -165,11 +159,7 @@ sfsw42rdfes45.addListener(async function (request, sender, reply) {
 
                     await sdf7sdfh.executeScript({
                         target: {tabId: currentTab.id},
-                        func: ()=>{
-                            if (document.querySelector('body').style.overflow === 'hidden') {
-                                document.querySelector('body').style.overflow = 'auto';
-                            }
-                        },
+                        func: changeOverflow,
                         args: null
                     });
                 }
