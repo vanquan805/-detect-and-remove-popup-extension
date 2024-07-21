@@ -3,26 +3,23 @@
 
 import {changeOverflow} from "./libs/functions";
 
-let sf424fsfs = chrome || browser;
-let sdfs5r324sdf = sf424fsfs.runtime;
-let sfsw42rdfes45 = sdfs5r324sdf.onMessage;
-let sdfsfsdf = sf424fsfs.storage;
-let sdf8yw8er = sf424fsfs.tabs;
-let sdf7sdfh = sf424fsfs.scripting;
+let BrowserAPI = chrome || browser;
+let RuntimeAPI = BrowserAPI.runtime;
+let StorageAPI = BrowserAPI.storage;
+let TabsAPI = BrowserAPI.tabs;
+let ScriptingAPI = BrowserAPI.scripting;
 
+let workingTabId = null;
 
-sfsw42rdfes45.addListener(async function (request, sender, reply) {
+RuntimeAPI.onMessage.addListener(async function (request, sender, reply) {
     switch (request.action) {
         case 'remove':
-            var tabs = await sdf8yw8er.query({active: true});
-            var currentTab = tabs && tabs.length ? tabs[0] : null;
-
-            var settings = await sf424fsfs.storage.local.get(['settings']);
+            var settings = await BrowserAPI.storage.local.get(['settings']);
             settings = settings && settings.settings ? settings.settings : {position: ['fixed'], minHeight: 200, autoRemove: false};
 
-            if (currentTab) {
-                await sdf7sdfh.executeScript({
-                    target: {tabId: currentTab.id},
+            if (workingTabId) {
+                await ScriptingAPI.executeScript({
+                    target: {tabId: workingTabId},
                     func: (settings) => {
                         let elements = document.querySelectorAll('*');
                         elements.forEach((element) => {
@@ -35,14 +32,14 @@ sfsw42rdfes45.addListener(async function (request, sender, reply) {
                     args: [settings]
                 });
 
-                let popups = await sdfsfsdf.local.get(['popups']);
+                let popups = await StorageAPI.local.get(['popups']);
                 popups = popups && popups.popups ? popups.popups : {};
-                popups[currentTab.id] = 0;
-                await sdfsfsdf.local.set({popups});
-                await sf424fsfs.action.setBadgeText({text: '0'});
+                popups[workingTabId] = 0;
+                await StorageAPI.local.set({popups});
+                await BrowserAPI.action.setBadgeText({text: '0'});
 
-                await sdf7sdfh.executeScript({
-                    target: {tabId: currentTab.id},
+                await ScriptingAPI.executeScript({
+                    target: {tabId: workingTabId},
                     func: changeOverflow,
                     args: null
                 });
@@ -50,13 +47,10 @@ sfsw42rdfes45.addListener(async function (request, sender, reply) {
 
             break;
         case 'removeShowingPopup':
-            var tabs = await sdf8yw8er.query({active: true});
-            var currentTab = tabs && tabs.length ? tabs[0] : null;
-
-            var settings = await sf424fsfs.storage.local.get(['settings']);
+            var settings = await BrowserAPI.storage.local.get(['settings']);
             settings = settings && settings.settings ? settings.settings : {position: ['fixed'], minHeight: 200, autoRemove: false};
 
-            if (currentTab) {
+            if (workingTabId) {
 
                 let removeShowingPopup = (settings) => {
                     let elements = document.querySelectorAll('*');
@@ -77,23 +71,23 @@ sfsw42rdfes45.addListener(async function (request, sender, reply) {
                     return popupElements.length;
                 };
 
-                let result = await sdf7sdfh.executeScript({
-                    target: {tabId: currentTab.id},
+                let result = await ScriptingAPI.executeScript({
+                    target: {tabId: workingTabId},
                     func: removeShowingPopup,
                     args: [settings]
                 });
 
                 if (result && result[0] && typeof result[0].result !== "undefined") {
                     let popupCount = result[0].result;
-                    let popups = await sdfsfsdf.local.get(['popups']);
+                    let popups = await StorageAPI.local.get(['popups']);
                     popups = popups && popups.popups ? popups.popups : {};
-                    popups[currentTab.id] = popupCount;
-                    await sdfsfsdf.local.set({popups});
+                    popups[workingTabId] = popupCount;
+                    await StorageAPI.local.set({popups});
                     let text = popupCount < 99 && popupCount > 10 ? `${Math.floor(popupCount / 10)}0+` : (popupCount <= 10 ? `${popupCount}` : '99+');
-                    await sf424fsfs.action.setBadgeText({text: text});
+                    await BrowserAPI.action.setBadgeText({text: text});
 
-                    await sdf7sdfh.executeScript({
-                        target: {tabId: currentTab.id},
+                    await ScriptingAPI.executeScript({
+                        target: {tabId: workingTabId},
                         func: changeOverflow,
                         args: null
                     });
@@ -101,27 +95,21 @@ sfsw42rdfes45.addListener(async function (request, sender, reply) {
             }
             break;
         case 'updatePopupCount':
-            var tabs = await sdf8yw8er.query({active: true});
-            var currentTab = tabs && tabs.length ? tabs[0] : null;
-
-            if (currentTab) {
-                let popups = await sdfsfsdf.local.get(['popups']);
+            if (workingTabId) {
+                let popups = await StorageAPI.local.get(['popups']);
                 popups = popups && popups.popups ? popups.popups : {};
-                popups[currentTab.id] = request.popupCount;
-                await sdfsfsdf.local.set({popups});
+                popups[workingTabId] = request.popupCount;
+                await StorageAPI.local.set({popups});
 
                 let text = request.popupCount < 99 && request.popupCount > 10 ? `${Math.floor(request.popupCount / 10)}0+` : (request.popupCount <= 10 ? `${request.popupCount}` : '99+');
-                await sf424fsfs.action.setBadgeText({text: text});
+                await BrowserAPI.action.setBadgeText({text: text});
             }
             break;
         case 'update':
-            var tabs = await sdf8yw8er.query({active: true});
-            var currentTab = tabs && tabs.length ? tabs[0] : null;
-
-            var settings = await sf424fsfs.storage.local.get(['settings']);
+            var settings = await BrowserAPI.storage.local.get(['settings']);
             settings = settings && settings.settings ? settings.settings : {position: ['fixed'], minHeight: 200, autoRemove: false};
 
-            if (currentTab) {
+            if (workingTabId) {
 
                 let countPopup = (settings) => {
                     let elements = document.querySelectorAll('*');
@@ -142,23 +130,23 @@ sfsw42rdfes45.addListener(async function (request, sender, reply) {
                     return popupElements.length;
                 };
 
-                let result = await sdf7sdfh.executeScript({
-                    target: {tabId: currentTab.id},
+                let result = await ScriptingAPI.executeScript({
+                    target: {tabId: workingTabId},
                     func: countPopup,
                     args: [settings]
                 });
 
                 if (result && result[0] && typeof result[0].result !== "undefined") {
                     let popupCount = result[0].result;
-                    let popups = await sdfsfsdf.local.get(['popups']);
+                    let popups = await StorageAPI.local.get(['popups']);
                     popups = popups && popups.popups ? popups.popups : {};
-                    popups[currentTab.id] = popupCount;
-                    await sdfsfsdf.local.set({popups});
+                    popups[workingTabId] = popupCount;
+                    await StorageAPI.local.set({popups});
                     let text = popupCount < 99 && popupCount > 10 ? `${Math.floor(popupCount / 10)}0+` : (popupCount <= 10 ? `${popupCount}` : '99+');
-                    await sf424fsfs.action.setBadgeText({text: text});
+                    await BrowserAPI.action.setBadgeText({text: text});
 
-                    await sdf7sdfh.executeScript({
-                        target: {tabId: currentTab.id},
+                    await ScriptingAPI.executeScript({
+                        target: {tabId: workingTabId},
                         func: changeOverflow,
                         args: null
                     });
@@ -168,22 +156,24 @@ sfsw42rdfes45.addListener(async function (request, sender, reply) {
     }
 });
 
-sdf8yw8er.onRemoved.addListener(async function (tabid, removed) {
-    let popups = await sdfsfsdf.local.get(['popups']);
+TabsAPI.onRemoved.addListener(async function (tabid, removed) {
+    let popups = await StorageAPI.local.get(['popups']);
     popups = popups && popups.popups ? popups.popups : {};
     popups[tabid] = 0;
-    await sdfsfsdf.local.set({popups});
+    await StorageAPI.local.set({popups});
 });
 
-sdf8yw8er.onActivated.addListener(async function (activeInfo) {
+TabsAPI.onActivated.addListener(async function (activeInfo) {
     let {tabId} = activeInfo;
-    let popups = await sdfsfsdf.local.get(['popups']);
+    workingTabId = tabId;
+
+    let popups = await StorageAPI.local.get(['popups']);
     popups = popups && popups.popups ? popups.popups : {};
 
     if (typeof popups[tabId] !== "undefined") {
         let text = popups[tabId] < 99 && popups[tabId] > 10 ? `${Math.floor(popups[tabId] / 10)}0+` : (popups[tabId] <= 10 ? `${popups[tabId]}` : '99+');
-        await sf424fsfs.action.setBadgeText({text: text});
+        await BrowserAPI.action.setBadgeText({text: text});
     }else{
-        await sf424fsfs.action.setBadgeText({text: ''});
+        await BrowserAPI.action.setBadgeText({text: ''});
     }
 });

@@ -7,7 +7,7 @@ import './style.css';
 
 export const UserContext = React.createContext(null);
 
-let sf424fsfs = chrome || browser;
+let BrowserAPI = chrome || browser;
 
 function App() {
     let [settings, setSettings] = useState({position: ['fixed'], minHeight: 200, autoRemove: false});
@@ -18,7 +18,7 @@ function App() {
 
 
     useEffect(() => {
-        sf424fsfs.storage.local.get(['settings'], function (values) {
+        BrowserAPI.storage.local.get(['settings'], function (values) {
             if (values && values.settings) {
                 setSettings(values.settings);
             }
@@ -27,7 +27,7 @@ function App() {
 
 
     if (currentTabId === null) {
-        sf424fsfs.tabs.query({active: true}, function (tabs) {
+        BrowserAPI.tabs.query({active: true}, function (tabs) {
             if (tabs && tabs.length && tabs[0] && tabs[0].id) {
                 setCurrentTabId(tabs[0].id);
             }
@@ -35,7 +35,7 @@ function App() {
     }
 
     if (isStart === null) {
-        sf424fsfs.storage.local.get(['isStart'], function (values) {
+        BrowserAPI.storage.local.get(['isStart'], function (values) {
             if (values && values.isStart) {
                 setIsStart(values.isStart);
             }
@@ -43,7 +43,7 @@ function App() {
     }
 
     useEffect(() => {
-        sf424fsfs.storage.local.get(['popups'], function (values) {
+        BrowserAPI.storage.local.get(['popups'], function (values) {
             if (values && values.popups && values.popups[currentTabId]) {
                 setTotal(values.popups[currentTabId]);
             }
@@ -52,7 +52,7 @@ function App() {
 
     useEffect(() => {
         setTimeout(() => {
-            sf424fsfs.storage.local.get(['popups'], function (values) {
+            BrowserAPI.storage.local.get(['popups'], function (values) {
                 if (values && values.popups && values.popups[currentTabId]) {
                     setTotal(values.popups[currentTabId]);
                 }
@@ -61,19 +61,19 @@ function App() {
     }, [settings]);
 
     let onRemove = () => {
-        sf424fsfs.runtime.sendMessage({
+        BrowserAPI.runtime.sendMessage({
             action: "remove"
         });
         setTotal(0);
     };
 
     let onRemoveShowingPopup = () => {
-        sf424fsfs.runtime.sendMessage({
+        BrowserAPI.runtime.sendMessage({
             action: "removeShowingPopup"
         });
 
         setTimeout(() => {
-            sf424fsfs.storage.local.get(['popups'], function (values) {
+            BrowserAPI.storage.local.get(['popups'], function (values) {
                 if (values && values.popups && values.popups[currentTabId]) {
                     setTotal(values.popups[currentTabId]);
                 }
@@ -84,8 +84,8 @@ function App() {
     let onFinish = async (values) => {
         let {position, minHeight, autoRemove} = values;
 
-        await sf424fsfs.storage.local.set({settings: {position, minHeight, autoRemove}});
-        await sf424fsfs.runtime.sendMessage({action: 'update'});
+        await BrowserAPI.storage.local.set({settings: {position, minHeight, autoRemove}});
+        await BrowserAPI.runtime.sendMessage({action: 'update'});
         setUpdateText('Updated!');
 
         setTimeout(() => {

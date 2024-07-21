@@ -1,13 +1,15 @@
 /*global chrome*/
 /*global browser*/
 
-let sf424fsfs = chrome || browser;
+import {changeOverflow} from "../libs/functions";
+
+let BrowserAPI = chrome || browser;
 
 async function getAllPopup() {
     let elements = document.querySelectorAll('*');
     let popupElements = [];
 
-    let settings = await sf424fsfs.storage.local.get(['settings']);
+    let settings = await BrowserAPI.storage.local.get(['settings']);
     settings = settings && settings.settings ? settings.settings : {
         position: ['fixed'],
         minHeight: 200,
@@ -26,11 +28,7 @@ async function getAllPopup() {
         }
     }
 
-
-
-    if (document.querySelector('body').style.overflow === 'hidden') {
-        document.querySelector('body').style.overflow = 'auto';
-    }
+    changeOverflow();
 
     return popupElements;
 }
@@ -38,7 +36,7 @@ async function getAllPopup() {
 window.addEventListener("load", async () => {
     let popup = await getAllPopup();
 
-    await sf424fsfs.runtime.sendMessage({
+    await BrowserAPI.runtime.sendMessage({
         action: 'updatePopupCount',
         popupCount: popup.length
     });
@@ -63,7 +61,7 @@ window.addEventListener("load", async () => {
             if (elements.length > 0) {
                 let popup = await getAllPopup();
 
-                await sf424fsfs.runtime.sendMessage({
+                await BrowserAPI.runtime.sendMessage({
                     action: 'updatePopupCount',
                     popupCount: popup.length
                 });
